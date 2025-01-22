@@ -1,5 +1,11 @@
 import mongoose from "mongoose"
 import bcrypt from "bcrypt"
+import dotenv from "dotenv"
+import jwt from "jsonwebtoken"
+
+dotenv.config({
+    path: "../../.env"
+})
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -30,14 +36,28 @@ const userSchema = new mongoose.Schema({
         default: "user",
         enum: ["user", "admin"]
     },
-    favourites: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Book"
-    },
-    orders: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "order"
-    },
+    favourites: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Book"
+        }
+    ],
+    cart: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Book"
+        }
+    ],
+    orders: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "order"
+        }
+    ],
+    refreshToken: {
+        type: String
+    }
+
 },{timestamps:true})
 
 userSchema.pre("save", async function(next){
@@ -45,7 +65,30 @@ userSchema.pre("save", async function(next){
     next()
 })
 
+userSchema.methods.generateAccessToken = function(){
+    console.log("hello")
 
+        return jwt.sign(
+        {
+            _id: this._id
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
 
+userSchema.methods.generateRefreshToken = function(){
+    return jwt.sign(
+        {
+            _id:this._id
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
 
 export const User = mongoose.model("User", userSchema)

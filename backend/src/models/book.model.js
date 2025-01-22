@@ -1,5 +1,7 @@
 import mongoose, {} from "mongoose";
 
+
+//etay image sction add korte mone chilo na jeta tai pore shortcut e korar jonno mongodb database e oikhane edit kore boshaye disi pore.
 const bookSchema = new mongoose.Schema(
     {
         title: {
@@ -15,7 +17,7 @@ const bookSchema = new mongoose.Schema(
             required: true
         },
         price: {
-            type: Number,
+            type: String,
             required: true
         },
         description: {
@@ -23,7 +25,7 @@ const bookSchema = new mongoose.Schema(
             required: true
         }, 
         language: {
-            type: Number,
+            type: String,
             required: true
         },
     }, {timestamps: true}

@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Book"
     },
-    username: {
+    status: {
         type: String,
         default: "Order Placed",
         enum: ["Order Placed", "Out for delivery", "Delivered", "Canceled"]
